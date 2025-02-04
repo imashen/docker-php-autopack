@@ -1,0 +1,8 @@
+pcntl
+curl
+fileinfo
+exif
+mysqli
+pdo_mysql
+redis
+imagick
