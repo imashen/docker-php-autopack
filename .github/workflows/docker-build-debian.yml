@@ -31,15 +31,16 @@ jobs:
           ${{ runner.os }}-docker-
 
     - name: Build Debian-based Docker image for ${{ matrix.architecture }}
+      id: build-debian
       run: |
         docker buildx build --file docker/debian/Dockerfile \
           --platform linux/${{ matrix.architecture }} \
-          --tag my-php-image:fpm-${{ matrix.architecture }} --push .
+          --tag imashen/php:8.3.8-fpm --push .
 
-    - name: Push Debian Docker image to Docker Hub for ${{ matrix.architecture }}
+    - name: Create and push multi-architecture manifest for Debian
+      if: ${{ matrix.architecture == 'arm64' }}
       run: |
-        docker tag my-php-image:fpm-${{ matrix.architecture }} username/my-php-image:fpm-${{ matrix.architecture }}
-        docker push username/my-php-image:fpm-${{ matrix.architecture }}
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        docker manifest create imashen/php:8.3.8-fpm \
+          --amend imashen/php:8.3.8-fpm-amd64 \
+          --amend imashen/php:8.3.8-fpm-arm64
+        docker manifest push imashen/php:8.3.8-fpm
