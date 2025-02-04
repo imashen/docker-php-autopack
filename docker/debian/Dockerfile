@@ -24,13 +24,15 @@ WORKDIR /www
 
 # 安装扩展
 RUN if [ -f /tmp/.ext ]; then \
-      cat /tmp/.ext | while read ext; do \
+    cat /tmp/.ext | while read ext; do \
         if [ ! -z "$$ext" ]; then \
-          echo "Installing extension: $$ext"; \
-          install-php-extensions $$ext; \
+            echo "Installing extension: $$ext"; \
+            install-php-extensions $$ext; \
         fi; \
-      done; \
-    fi && rm -rf /tmp/.ext
+    done; \
+else \
+    echo ".ext file not found"; \
+fi && rm -rf /tmp/.ext
 
 # 安装 Composer
 RUN install-php-extensions @composer
