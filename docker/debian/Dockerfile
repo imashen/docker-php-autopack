@@ -3,9 +3,9 @@ FROM php:8.3.8-fpm
 
 # 安装常见的系统依赖包
 RUN apt-get update && apt-get install -y \
-#    libpng-dev \
-#    libjpeg62-turbo-dev \
-#    libfreetype6-dev \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     libzip-dev \
     curl \
     git \
@@ -23,7 +23,7 @@ COPY ./php/.ext /tmp/.ext
 WORKDIR /www
 
 # 安装扩展
-RUN install-php-extensions pcntl curl fileinfo exif mysqli pdo_mysql redis imagick opcache
+RUN install-php-extensions pcntl curl fileinfo exif mysqli pdo_mysql redis imagick opcache gd
 
 # 安装 Composer
 RUN install-php-extensions @composer
